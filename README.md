@@ -1,2 +1,17 @@
-# Google-Home-Tizen-Bridge
-This is a full guide along with the required worker.js code to create your own integration between Google Home and Samsung SmartThings, restoring functionalities such as volume control and launching specific apps
+Samsung Smart TV (Tizen OS) to Google Home Bridge
+Connect Google Home, Google Nest Hub, and Google Assistant to Samsung Smart TVs with:
+🎮 Dynamic HDMI Device Names: Recognizes "XBOX SeriesX|S", "PlayStation 5", "Nintendo Switch", "Apple TV", etc.
+🔊 Full Volume & Mute: Voice commands for exact volume percentages and mute toggles.
+📺 Interactive Google Nest Hub Card: Touchscreen volume slider, power button, and source picker.
+🚀 100% Free Forever: Runs on Cloudflare Workers Free Tier (100k requests/day, no credit card required).
+🔒 Permanent Authentication: Uses official SmartThings Webhook SmartApp with auto-refreshing OAuth tokens in Cloudflare KV.
+📂 Files Included
+MASTER_SETUP_GUIDE.md: Complete step-by-step beginner guide with exact instructions for Cloudflare, SmartThings Developer Workspace, the SmartThings phone app, and the Google Actions Developer Console.
+worker.js: Production-ready Cloudflare Worker code with zero personal information, fully commented.
+wrangler.toml: Ready-to-use Cloudflare Workers deployment configuration file.
+TROUBLESHOOTING.md: Common fixes for offline TV states, network standby, and input syncing.
+🚀 Quick Start
+Open MASTER_SETUP_GUIDE.md and follow the 4 simple setup phases.
+Deploy worker.js to your free Cloudflare account.
+Link with Google Home on your phone.
+Enjoy voice and touch control over your Samsung TV!
