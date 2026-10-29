@@ -88,15 +88,15 @@ Cloudflare Workers provides 100,000 free requests per day forever with zero cost
 
 ### Step 1.2: Create the KV Storage
 The worker uses Cloudflare KV (Key-Value storage) to permanently store your TV's connection token and device ID.
-1. In the Cloudflare dashboard left menu, navigate to **Workers & Pages** $\rightarrow$ **KV**.
-2. Click **Create a namespace**.
-3. Name it: `TIZEN_KV` and click **Add**.
+1. In the Cloudflare dashboard left menu, navigate to **Storage & databases** $\rightarrow$ **Workers KV**.
+2. Click **Create a KV namespace**.
+3. Name it: `TIZEN_KV`, leave "Data Location" as "Standard" and click **Create**.
 
 ### Step 1.3: Create the Worker
-1. In the left menu, navigate to **Workers & Pages** $\rightarrow$ **Overview**.
-2. Click **Create application** $\rightarrow$ select the **Workers** tab $\rightarrow$ click **Create Worker**.
+1. In the left menu, navigate to **Compute** $\rightarrow$ **Workers & Pages** $\rightarrow$ **Overview**.
+2. Click **Create application** $\rightarrow$ select **Start with Hello World!**.
 3. Name your worker: `tizen-bridge` and click **Deploy**.
-4. Once deployed, click **Edit code** (or **Quick Edit**).
+4. Once deployed, click **Edit code** (or **Quick Edit**) in the top-right.
 
 ### Step 1.4: Paste the Code
 1. Delete all existing code in the editor.
@@ -106,7 +106,7 @@ The worker uses Cloudflare KV (Key-Value storage) to permanently store your TV's
 ### Step 1.5: Bind the KV Namespace
 1. Click the back arrow `<-` to return to your Worker details page.
 2. Click the **Settings** tab.
-3. Click **Variables and Secrets** (or **Variables**).
+3. Click **Add binding** in the **Bindings** section.
 4. Scroll down to **KV Namespace Bindings** and click **Add binding**.
 5. Set:
    - **Variable name**: `TIZEN_KV` *(must be exact uppercase)*
@@ -126,7 +126,7 @@ https://tizen-bridge.<your-subdomain>.workers.dev
 
 To allow your worker to communicate with your TV permanently, register a Webhook SmartApp in Samsung's Developer Workspace.
 
-1. Go to the [SmartThings Developer Workspace](https://smartthings.developer.samsung.com/workspace).
+1. Go to the [SmartThings Developer Workspace](https://developer.smartthings.com/workspace).
 2. Sign in with the **same Samsung Account** that is signed in on your TV and SmartThings phone app.
 3. In the left sidebar, click **Automation for SmartThings** (or **Projects** $\rightarrow$ **New Project**).
 4. Choose **SmartApp** $\rightarrow$ **Webhook Endpoint**.
@@ -150,7 +150,8 @@ To allow your worker to communicate with your TV permanently, register a Webhook
    - **Client ID**
    - **Client Secret**
 10. *(Recommended)* Add these to your Cloudflare Worker:
-    - In Cloudflare Dashboard $\rightarrow$ Worker Settings $\rightarrow$ **Variables and Secrets** $\rightarrow$ **Secrets**.
+    - In Cloudflare Dashboard $\rightarrow$ **Compute** $\rightarrow$ **Workers & Pages** $\rightarrow$ **tizenbridge** $\rightarrow$ **Settings tab**.
+    - Click **Add variable** at the top of the page next to **Runtime variables and secrets**
     - Add `SMARTTHINGS_CLIENT_ID` with your Client ID.
     - Add `SMARTTHINGS_CLIENT_SECRET` with your Client Secret.
     - Click **Deploy**.
@@ -165,17 +166,18 @@ Now install your custom SmartApp on your phone so it can grant access to your Sa
 1. Open the **SmartThings mobile app** on your phone (iOS or Android).
 2. Tap **Menu** (three lines) $\rightarrow$ tap the **Settings** gear icon.
 3. Scroll down to **About SmartThings**.
-4. **The Developer Secret**: Tap the **Version number** continuously **10 times** until a prompt appears saying *"Developer mode enabled"*.
-5. A new toggle titled **Developer Mode** will appear. Turn it **ON**.
+4. **The Developer Secret**: Tap and hold the **About SmartThings** button for **10 seconds**.
+5. A new toggle titled **Developer Mode** will appear below the **About SmartThings** button. Turn it **ON**.
 6. Completely **force-close** the SmartThings app and reopen it.
 
 ### Step 3.2: Add the "Tizen Bridge" SmartApp
-1. In the SmartThings app, navigate to **Automations** (or the **Life** / **Routines** tab depending on your app version).
-2. Tap the **`+`** icon (Add).
-3. Scroll all the way down past the built-in services until you see **Custom / Developer SmartApps**.
-4. You will see **Tizen Bridge** listed! Tap it.
-5. Tap **Select your Samsung TV** and pick your TV from the device list.
-6. Tap **Done** (or **Save**).
+1. In the SmartThings app, navigate to **Routines** (or the **Life** / **Automations** tab depending on your app version).
+2. Go to the **Discover** tab at the top.
+3. Scroll all the way down past the built-in services until you see **Tizen Bridge**.
+4. Tap **Tizen Bridge**.
+5. Set **Name** to "TizenBridge".
+6. Select your TV from the list below.
+7. Tap **Done** (or **Save**).
 
 ### Step 3.3: Verify Connection in Your Browser
 Open your browser and navigate to:
@@ -197,26 +199,30 @@ You should see:
 
 Now tell Google Home how to communicate with your Cloudflare Worker.
 
-### Step 4.1: Create a Smart Home Project in Actions on Google
-1. Open the [Google Actions Console](https://console.actions.google.com).
-2. Click **New Project**.
+### Step 4.1: Create a Smart Home Project in Google Home Console
+1. Open the [Google Home Console](https://console.home.google.com).
+2. Click **Create a Project**.
 3. Enter a project name (e.g., `My Samsung TV Bridge`) and click **Create Project**.
-4. On the "What kind of Action do you want to build?" screen, select **Smart Home** $\rightarrow$ click **Start Building**.
 
 ### Step 4.2: Configure Cloud Fulfillment
-1. Under Quick Setup, click **Name your Smart Home action** and set display name to: `Tizen TV`. Click **Save**.
-2. Click **Add Action** (or **Actions** in the left menu).
-3. In the **Fulfillment URL** field, enter:
+1. On the **Project Home** page, click **Add cloud-to-cloud integration**.
+2. Click **Next: Develop** at the bottom of the page.
+3. Click **Next: Setup** at the bottom of the page.
+4. Set **Integration name** to "Samsung TV Bridge"
+5. Set **Device type** to "TV"
+6. In the **App branding** field, upload your app icon (can use the SamsungTVBridge.png file provided on the Github repo)
+7. Scroll down to **Cloud fulfillment URL**
+8. In the **Fulfillment URL** field, enter:
    ```
    https://tizen-bridge.<your-subdomain>.workers.dev/smarthome
    ```
-4. Click **Save**.
+9. Click **Save**.
 
 ### Step 4.3: Configure Account Linking
-1. In the left menu, click **Develop** $\rightarrow$ **Account Linking**.
+1. On the same page, scroll to the **Account Linking** section.
 2. Set the following fields:
-   - **Client ID**: `google-tizen-client` *(or any text you want)*
-   - **Client Secret**: `google-tizen-secret-123` *(or any text you want)*
+   - **Client ID**: `tizenbridge`.
+   - **Client Secret**: `tizenbridge`.
    - **Authorization URL**:
      ```
      https://tizen-bridge.<your-subdomain>.workers.dev/google/auth
@@ -226,20 +232,20 @@ Now tell Google Home how to communicate with your Cloudflare Worker.
      https://tizen-bridge.<your-subdomain>.workers.dev/google/token
      ```
    - **Scopes**: (Leave blank)
-3. Under **Testing Instructions**, enter anything (e.g., `test`) and click **Save**.
 
 ### Step 4.4: Enable Testing
-1. In the top navigation bar, click the **Test** tab.
-2. Click **Start Testing** (or ensure the Simulator is enabled). This makes the test action visible in your personal Google Home mobile app.
+1. In the side navigation bar, click **Cloud-to-cloud** $\rightarrow$ **Test**.
+2. Click **Start Testing** or **Test** This makes the test action visible in your personal Google Home mobile app.
 
 ### Step 4.5: Link in the Google Home Mobile App
 1. Open the **Google Home app** on your phone.
 2. Tap the **`+`** button (or go to **Devices** $\rightarrow$ **Add device**).
-3. Select **Works with Google**.
-4. Search for: `[test] My Samsung TV Bridge` (it will have the `[test]` prefix).
-5. Tap it. A clean authorization page will open:
+3. Select **Link app or service**
+4. Select **Works with Google**.
+5. Search for: `[test] My Samsung TV Bridge` (it will have the `[test]` prefix).
+6. Tap it. A clean authorization page will open:
    - Tap the blue **Authorize & Link** button.
-6. Assign your TV to a room (e.g., *Living Room*).
+7. Assign your TV to a room (e.g., *Living Room*).
 
 ✨ **Done! Your Samsung TV now appears in Google Home with full controls and dynamic device names!**
 
