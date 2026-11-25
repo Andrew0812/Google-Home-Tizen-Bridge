@@ -1,0 +1,30 @@
+# Cloudflare Workers Configuration for Tizen Google Home Bridge (v3.1-zero-trust-locked)
+# Official Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+
+name = "tizen-bridge"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# KV Namespace Binding
+# Replace "YOUR_KV_NAMESPACE_ID" with the ID generated when you run:
+#   npx wrangler kv:namespace create TIZEN_KV
+# or create it in the Cloudflare Dashboard under Workers & Pages > KV.
+[[kv_namespaces]]
+binding = "TIZEN_KV"
+id = "YOUR_KV_NAMESPACE_ID"
+
+# Optional: Default non-sensitive environment variables
+[vars]
+TV_NAME = "Living Room TV"
+# SMARTTHINGS_DEVICE_ID = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# Automatic 12-hour Cron Trigger to proactively rotate SmartThings OAuth tokens before expiry
+[triggers]
+crons = ["0 */12 * * *"]
+
+# Secrets (Do NOT hardcode these here. Set them via the Cloudflare dashboard or `wrangler secret put`):
+# - BRIDGE_SECRET              (Highly Recommended: master passphrase protecting /google/auth, /smarthome HMAC tokens, /debug, /devices, /tv/status, /local-devices, /oauth/login, and /voice-command)
+# - SMARTTHINGS_CLIENT_ID      (Required: OAuth Client ID from SmartThings Developer Workspace)
+# - SMARTTHINGS_CLIENT_SECRET  (Required: OAuth Client Secret from SmartThings Developer Workspace)
+# - GOOGLE_CLIENT_ID           (Optional: enforces exact client_id match on /google/auth and /google/token)
+# - GOOGLE_CLIENT_SECRET       (Optional: enforces exact client_secret match on /google/token)
